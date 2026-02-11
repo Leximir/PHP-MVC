@@ -1,0 +1,20 @@
+{
+    "name": "pc/php-mvc",
+    "autoload": {
+        "psr-4": {
+            "Pc\\PhpMvc\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Leximir",
+            "email": "aleksa.stankovic@proton.me"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "app\\": "./"
+        }
+    },
+    "require": {}
+}

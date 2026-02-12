@@ -3,6 +3,7 @@
 use app\core\Application;
 
 require_once __DIR__."/vendor/autoload.php";
+require_once "functions.php";
 
 $app = new Application(); // Kreiranje instance aplikacije (inicijalizuje router, request/response, config, itd.)
 

@@ -9,8 +9,6 @@ $app = new Application(dirname(__DIR__)); // Kreira instancu aplikacije i postav
 
 $app->router->get('/', 'home');
 
-$app->router->get('/contact', function(){
-    return "Contact";
-});
+$app->router->get('/contact', 'contact');
 
 $app->run(); // Pokretanje aplikacije: router pokušava da match-uje rutu i izvrši odgovarajući handler

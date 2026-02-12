@@ -18,13 +18,22 @@ class Router
 
     protected function layoutContent()
     {
-
+        ob_start(); // Uključuje output buffering: sve što se "ispisuje" ide u buffer umjesto na ekran.
+        include_once Application::$ROOT_DIR."/views/layouts/main.view.php"; // Učitava layout (glavni šablon: header/footer + {{ content }} placeholder).
+        return ob_get_clean(); // Vraća sadržaj buffera kao string i gasi buffer.
     }
 
+    protected function renderOnlyView($view)
+    {
+        ob_start();  // Uključuje output buffering: sve što se "ispisuje" ide u buffer umjesto na ekran.
+        include_once Application::$ROOT_DIR."/views/$view.view.php"; // Učitava konkretan view fajl (npr. "contact" -> views/contact.view.php).
+        return ob_get_clean(); // Vraća sadržaj buffera kao string i gasi buffer.
+    }
     public function renderView($view)
     {
-        $layoutContent = $this->layoutContent();
-        include_once Application::$ROOT_DIR."/views/$view.view.php";
+        $layoutContent = $this->layoutContent(); // Učita layout kao string (sadrži {{ content }} mjesto za ubacivanje view-a).
+        $viewContent = $this->renderOnlyView($view); // Učita sadržaj traženog view-a kao string.
+        return str_replace("{{ content }}", $viewContent, $layoutContent); // U layoutu zamijeni {{ content }} sa view sadržajem i vrati finalni HTML.
     }
 
     public function resolve()

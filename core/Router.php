@@ -4,12 +4,13 @@ namespace app\core;
 
 class Router
 {
-    public Request $request; // Čuva Request objekat (trenutni HTTP zahtjev) da Router može čitati path i metodu.
+    public Request $request;      // Čuva Request objekat (trenutni HTTP zahtjev) da Router može čitati path i metodu.
     protected array $routes = []; // Mapa ruta: čuva definisane rute (path -> callback) po HTTP metodi.
-
-    public function __construct(Request $request)
+    public Response $response;    // Cuva Response objekat da ruter ima pristup HTTP odgovorima aplikacije (npr. postavljanje status koda, redirect, header-i).
+    public function __construct(Request $request, Response $response)
     {
         $this->request = $request; // Prima i sprema Request objekat koji Router koristi za čitanje path/metode.
+        $this->response = $response;
     }
     public function get($path, $callback) // Registruje GET rutu: povezuje URL putanju sa callback funkcijom.
     {
@@ -43,6 +44,7 @@ class Router
         $callback = $this->routes[$method][$path] ?? false; // Traži registrovanu rutu za dati path i metodu; ako ne postoji vraća false.
 
         if($callback === false){ // Ako ruta nije pronađena, vraćamo 404 poruku i prekidamo izvršavanje.
+            $this->response->setStatusCode(404);
             return "Not Found";
         }
 

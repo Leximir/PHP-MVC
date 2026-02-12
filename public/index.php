@@ -5,7 +5,7 @@ use app\core\Application;
 require_once __DIR__ . "/../vendor/autoload.php";
 require_once __DIR__ . "/../functions.php";
 
-$app = new Application(); // Kreiranje instance aplikacije (inicijalizuje router, request/response, config, itd.)
+$app = new Application(dirname(__DIR__)); // Kreira instancu aplikacije i postavlja root direktorij projekta; tokom inicijalizacije kreira Request i Router i povezuje ih da bi aplikacija mogla prepoznati trenutni URL i izvršiti odgovarajuću rutu.
 
 $app->router->get('/', 'home');
 

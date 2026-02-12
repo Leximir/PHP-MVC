@@ -16,9 +16,15 @@ class Router
         $this->routes['get'][$path] = $callback; // Sprema callback pod datom putanjom u GET rute.
     }
 
+    protected function layoutContent()
+    {
+
+    }
+
     public function renderView($view)
     {
-        include_once __DIR__ . "/../views/$view.view.php";
+        $layoutContent = $this->layoutContent();
+        include_once Application::$ROOT_DIR."/views/$view.view.php";
     }
 
     public function resolve()

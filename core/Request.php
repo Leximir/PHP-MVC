@@ -18,6 +18,6 @@ class Request
 
     public function getMethod()
     {
-        
+        return strtolower($_SERVER['REQUEST_METHOD']);// Vraća HTTP metodu zahtjeva (GET/POST...) pretvorenu u mala slova radi lakšeg poređenja u Routeru.
     }
 }

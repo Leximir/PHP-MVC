@@ -14,6 +14,6 @@ class Application
 
     public function run()
     {
-        $this->router->resolve(); // Pokreće obradu zahtjeva: Router pronalazi i izvršava odgovarajuću rutu.
+        echo $this->router->resolve(); // Pokreće obradu zahtjeva: Router pronalazi i izvršava odgovarajuću rutu.
     }
 }

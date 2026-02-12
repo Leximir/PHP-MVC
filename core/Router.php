@@ -16,6 +16,11 @@ class Router
         $this->routes['get'][$path] = $callback; // Sprema callback pod datom putanjom u GET rute.
     }
 
+    public function renderView($view)
+    {
+        include_once __DIR__ . "/../views/$view.view.php";
+    }
+
     public function resolve()
     {
         $path = $this->request->getPath(); // Uzima trenutni path i na osnovu njega pronalazi i izvršava odgovarajuću rutu.
@@ -23,11 +28,14 @@ class Router
         $callback = $this->routes[$method][$path] ?? false; // Traži registrovanu rutu za dati path i metodu; ako ne postoji vraća false.
 
         if($callback === false){ // Ako ruta nije pronađena, vraćamo 404 poruku i prekidamo izvršavanje.
-            echo "Not Found";
-            exit;
+            return "Not Found";
         }
 
-        echo call_user_func($callback); // Ako ruta postoji, izvršava callback (handler) i ispisuje rezultat.
+        if(is_string($callback)){
+            return $this->renderView($callback);
+        }
+
+        return call_user_func($callback); // Ako ruta postoji, izvršava callback (handler) i ispisuje rezultat.
     }
 
 }

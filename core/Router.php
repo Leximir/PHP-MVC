@@ -42,6 +42,12 @@ class Router
         return str_replace("{{ content }}", $viewContent, $layoutContent); // U layoutu zamijeni {{ content }} sa view sadržajem i vrati finalni HTML.
     }
 
+    public function renderContent($viewContent)
+    {
+        $layoutContent = $this->layoutContent(); // Učita layout kao string (sadrži {{ content }} mjesto za ubacivanje view-a).
+        return str_replace("{{ content }}", $viewContent, $layoutContent);
+    }
+
     public function resolve()
     {
         $path = $this->request->getPath(); // Uzima trenutni path i na osnovu njega pronalazi i izvršava odgovarajuću rutu.
@@ -50,7 +56,7 @@ class Router
 
         if($callback === false){ // Ako ruta nije pronađena, vraćamo 404 poruku i prekidamo izvršavanje.
             $this->response->setStatusCode(404);
-            return "Not Found";
+            return $this->renderView("_404");
         }
 
         if(is_string($callback)){

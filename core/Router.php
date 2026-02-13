@@ -10,7 +10,7 @@ class Router
     public function __construct(Request $request, Response $response)
     {
         $this->request = $request; // Prima i sprema Request objekat koji Router koristi za čitanje path/metode.
-        $this->response = $response;
+        $this->response = $response; // Prima i sprema Response objekat da Router može postaviti status kod ili raditi redirect.
     }
     public function get($path, $callback) // Registruje GET rutu: povezuje URL putanju sa callback funkcijom.
     {

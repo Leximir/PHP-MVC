@@ -17,6 +17,11 @@ class Router
         $this->routes['get'][$path] = $callback; // Sprema callback pod datom putanjom u GET rute.
     }
 
+    public function post($path, $callback) // Registruje POST rutu: povezuje URL putanju sa callback funkcijom.
+    {
+        $this->routes['post'][$path] = $callback; // Sprema callback pod datom putanjom u POST rute.
+    }
+
     protected function layoutContent()
     {
         ob_start(); // Uključuje output buffering: sve što se "ispisuje" ide u buffer umjesto na ekran.

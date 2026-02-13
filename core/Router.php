@@ -29,16 +29,22 @@ class Router
         return ob_get_clean(); // Vraća sadržaj buffera kao string i gasi buffer.
     }
 
-    protected function renderOnlyView($view)
+    protected function renderOnlyView($view, $params)
     {
+        // Pretvara $params niz u pojedinačne varijable dostupne unutar view fajla.
+        // Primjer: ['title' => 'Kontakt'] postaje $title = 'Kontakt' u view-u.
+        foreach ($params as $key => $value){
+            $$key = $value; // "Variable variables": kreira varijablu čije ime je u $key.
+        }
+
         ob_start();  // Uključuje output buffering: sve što se "ispisuje" ide u buffer umjesto na ekran.
         include_once Application::$ROOT_DIR."/views/$view.view.php"; // Učitava konkretan view fajl (npr. "contact" -> views/contact.view.php).
         return ob_get_clean(); // Vraća sadržaj buffera kao string i gasi buffer.
     }
-    public function renderView($view)
+    public function renderView($view, $params = [])
     {
         $layoutContent = $this->layoutContent(); // Učita layout kao string (sadrži {{ content }} mjesto za ubacivanje view-a).
-        $viewContent = $this->renderOnlyView($view); // Učita sadržaj traženog view-a kao string.
+        $viewContent = $this->renderOnlyView($view, $params); // Učita view kao string i ubaci mu proslijeđene parametre kao varijable.
         return str_replace("{{ content }}", $viewContent, $layoutContent); // U layoutu zamijeni {{ content }} sa view sadržajem i vrati finalni HTML.
     }
 
@@ -61,6 +67,13 @@ class Router
 
         if(is_string($callback)){
             return $this->renderView($callback);
+        }
+
+        if(is_array($callback)){                            // Provjerava da li je callback definisan kao [KlasaKontrolera, 'metoda'].
+            $callbackClass = $callback[0];                  // Uzima naziv klase kontrolera (npr. SiteController::class).
+            $callbackMethod = $callback[1];                 // Uzima ime metode koja se poziva na kontroleru (npr. 'handleContact').
+            $callbackObject = new $callbackClass();         // Kreira instancu kontrolera (metoda nije statička pa mora objekat).
+            $callback = [$callbackObject, $callbackMethod]; // Kreira instancu kontrolera (metoda nije statička pa mora objekat).
         }
 
         return call_user_func($callback); // Ako ruta postoji, izvršava callback (handler) i ispisuje rezultat.

@@ -21,6 +21,8 @@ class SiteController extends Controller
     }
     public function handleContact()
     {
+        $body = Application::$app->request->getBody();
+        dd($body);
         return "Handling data";
     }
 }

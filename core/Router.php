@@ -76,7 +76,7 @@ class Router
             $callback = [$callbackObject, $callbackMethod]; // Kreira instancu kontrolera (metoda nije statička pa mora objekat).
         }
 
-        return call_user_func($callback); // Ako ruta postoji, izvršava callback (handler) i ispisuje rezultat.
+        return call_user_func($callback, $this->request); // Poziva callback i prosljeđuje Request objekat (da handler može čitati body, path, metodu...).
     }
 
 }

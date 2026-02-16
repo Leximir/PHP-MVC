@@ -3,18 +3,32 @@
 namespace app\controllers;
 
 use app\core\Controller;
+use app\core\Request;
 
 class AuthController extends Controller
 {
 
-    public function login()
+    public function login(Request $request)
     {
-        return $this->render('login');
+
+        if($request->isGet()){
+            return $this->render('login');
+        }
+
+        if($request->isPost()){
+
+        }
     }
 
-    public function register()
+    public function register(Request $request)
     {
-        return $this->render('register');
+        if($request->isGet()){
+            return $this->render('login');
+        }
+
+        if($request->isPost()){
+
+        }
     }
 
 }

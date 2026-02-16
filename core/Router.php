@@ -57,7 +57,7 @@ class Router
     public function resolve()
     {
         $path = $this->request->getPath(); // Uzima trenutni path i na osnovu njega pronalazi i izvršava odgovarajuću rutu.
-        $method = $this->request->getMethod(); // Čita HTTP metodu (get/post) da bi se birala ruta za tu metodu.
+        $method = $this->request->method(); // Čita HTTP metodu (get/post) da bi se birala ruta za tu metodu.
         $callback = $this->routes[$method][$path] ?? false; // Traži registrovanu rutu za dati path i metodu; ako ne postoji vraća false.
 
         if($callback === false){ // Ako ruta nije pronađena, vraćamo 404 poruku i prekidamo izvršavanje.

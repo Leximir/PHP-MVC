@@ -24,10 +24,13 @@ class Router
 
     protected function layoutContent()
     {
+        $layout = Application::$app->controller->layout; // Uzima naziv trenutno aktivnog layout-a iz controller-a (npr. "main", "auth", ...).
+
         ob_start(); // Uključuje output buffering: sve što se "ispisuje" ide u buffer umjesto na ekran.
-        include_once Application::$ROOT_DIR."/views/layouts/main.view.php"; // Učitava layout (glavni šablon: header/footer + {{ content }} placeholder).
-        return ob_get_clean(); // Vraća sadržaj buffera kao string i gasi buffer.
+        include_once Application::$ROOT_DIR . "/views/layouts/$layout.view.php"; // Učitava odgovarajući layout fajl na osnovu izabranog layout-a.
+        return ob_get_clean(); // Vraća sadržaj layout-a kao string i gasi buffer.
     }
+
 
     protected function renderOnlyView($view, $params)
     {
@@ -56,27 +59,26 @@ class Router
 
     public function resolve()
     {
-        $path = $this->request->getPath(); // Uzima trenutni path i na osnovu njega pronalazi i izvršava odgovarajuću rutu.
-        $method = $this->request->method(); // Čita HTTP metodu (get/post) da bi se birala ruta za tu metodu.
-        $callback = $this->routes[$method][$path] ?? false; // Traži registrovanu rutu za dati path i metodu; ako ne postoji vraća false.
+        $path = $this->request->getPath();      // Uzima URL putanju (npr. "/contact") koju korisnik trenutno traži.
+        $method = $this->request->method();     // Uzima HTTP metodu zahtjeva (npr. "get" ili "post").
+        $callback = $this->routes[$method][$path] ?? false; // Traži callback za datu metodu i putanju; ako ne postoji, vraća false.
 
-        if($callback === false){ // Ako ruta nije pronađena, vraćamo 404 poruku i prekidamo izvršavanje.
+        if ($callback === false) {              // Ako ruta nije pronađena, postavlja 404 status i renderuje 404 view.
             $this->response->setStatusCode(404);
             return $this->renderView("_404");
         }
 
-        if(is_string($callback)){
+        if (is_string($callback)) {             // Ako je callback naziv view-a (string), direktno renderuje taj view.
             return $this->renderView($callback);
         }
 
-        if(is_array($callback)){                            // Provjerava da li je callback definisan kao [KlasaKontrolera, 'metoda'].
-            $callbackClass = $callback[0];                  // Uzima naziv klase kontrolera (npr. SiteController::class).
-            $callbackMethod = $callback[1];                 // Uzima ime metode koja se poziva na kontroleru (npr. 'handleContact').
-            $callbackObject = new $callbackClass();         // Kreira instancu kontrolera (metoda nije statička pa mora objekat).
-            $callback = [$callbackObject, $callbackMethod]; // Kreira instancu kontrolera (metoda nije statička pa mora objekat).
+        if (is_array($callback)) {              // Ako je callback [KlasaKontrolera, 'metoda'], potrebno je napraviti instancu kontrolera.
+            Application::$app->controller = new $callback[0](); // Kreira controller objekat i čuva ga u Application (da se zna "trenutni controller").
+            $callback[0] = Application::$app->controller;       // Zamjenjuje naziv klase u callback-u sa instancom objekta (non-static poziv metode).
         }
 
-        return call_user_func($callback, $this->request); // Poziva callback i prosljeđuje Request objekat (da handler može čitati body, path, metodu...).
+        return call_user_func($callback, $this->request); // Poziva callback i prosljeđuje Request objekat (handler može čitati body, path, metodu...).
     }
+
 
 }

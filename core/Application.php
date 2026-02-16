@@ -9,6 +9,7 @@ class Application
     public Request $request;              // Trenutni HTTP zahtjev (čuva informacije poput path-a i HTTP metode).
     public Response $response;            // HTTP odgovor aplikacije (npr. postavljanje status koda, redirect, header-i).
     public static Application $app;       // Globalna referenca na trenutno pokrenutu aplikaciju (lako dostupna iz drugih klasa).
+    public Controller $controller;
     public function __construct($rootPath)
     {
         self::$ROOT_DIR = $rootPath;                 // Postavlja root direktorij projekta (obično __DIR__ iz index.php).
@@ -21,5 +22,15 @@ class Application
     public function run()
     {
         echo $this->router->resolve(); // Pokreće obradu zahtjeva: Router pronalazi i izvršava odgovarajuću rutu.
+    }
+
+    public function getController(): Controller
+    {
+        return $this->controller;
+    }
+
+    public function setController(Controller $controller): void
+    {
+        $this->controller = $controller;
     }
 }

@@ -2,17 +2,25 @@
 
 ?>
 
-<h1>Register</h1>
+<h1>Create an Account</h1>
 
 <form action="" method="POST">
-    <div class="mb-3">
-        <label>First Name</label>
-        <input name="firstname" type="text" class="form-control">
-    </div>
 
-    <div class="mb-3">
-        <label>Last Name</label>
-        <input name="lastname" type="text" class="form-control">
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label>First Name</label>
+                <input name="firstname" type="text" class="form-control">
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="mb-3">
+                <label>Last Name</label>
+                <input name="lastname" type="text" class="form-control">
+            </div>
+        </div>
+
     </div>
 
     <div class="mb-3">

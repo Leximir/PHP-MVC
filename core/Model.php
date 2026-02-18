@@ -22,13 +22,13 @@ abstract class Model
 
     public function addError(string $attribute, string $rule, $params = [])
     {
-        $message = $this->errorMessages()[$rule] ?? ''; // Uzima šablon poruke za dato pravilo (npr. "Min length... {min}").
+        $message = $this->errorMessages()[$rule] ?? '';                 // Uzima šablon poruke za dato pravilo (npr. "Min length... {min}").
 
-        foreach ($params as $key => $value) {           // Prolazi kroz parametre pravila (npr. ['min' => 8])...
-            $message = str_replace("{$key}", $value, $message); // ...i ubacuje vrijednosti u poruku zamjenom placeholder-a (npr. {min} -> 8).
+        foreach ($params as $key => $value) {                           // Prolazi kroz parametre pravila (npr. ['min' => 8])...
+            $message = str_replace("{$key}", $value, $message);  // ...i ubacuje vrijednosti u poruku zamjenom placeholder-a (npr. {min} -> 8).
         }
 
-        $this->errors[$attribute][] = $message;         // Dodaje finalnu poruku greške u listu grešaka za dato polje (attribute).
+        $this->errors[$attribute][] = $message;                         // Dodaje finalnu poruku greške u listu grešaka za dato polje (attribute).
     }
 
     public function errorMessages()
@@ -45,45 +45,45 @@ abstract class Model
 
     public function validate()
     {
-        // Prolazi kroz sva pravila validacije koja definiše konkretan model (preko rules()).
-        foreach ($this->rules() as $attribute => $rules) {
 
-            $value = $this->{$attribute}; // Uzima trenutnu vrijednost atributa (property) iz modela (npr. $this->email, $this->password).
+        foreach ($this->rules() as $attribute => $rules) {  // Prolazi kroz sva pravila validacije koja definiše konkretan model (preko rules()).
 
-            // Svaki atribut može imati više pravila (required, email, min, max, match...).
-            foreach ($rules as $rule) {
+            $value = $this->{$attribute};                   // Uzima trenutnu vrijednost atributa (property) iz modela (npr. $this->email, $this->password).
 
-                $ruleName = $rule; // Podrazumijevano pretpostavlja da je rule string (npr. "required").
 
-                // Ako rule nije string, onda je u formatu niza (npr. ['min' => 8] ili [self::RULE_MIN, 'min' => 8]),
-                // pa uzimamo ime pravila iz prvog elementa.
-                if (!is_string($ruleName)) {
-                    $ruleName = $rule[0];
+            foreach ($rules as $rule) {     // Svaki atribut može imati više pravila (required, email, min, max, match...).
+
+                $ruleName = $rule;          // Podrazumijevano pretpostavlja da je rule string (npr. "required").
+
+
+
+                if (!is_string($ruleName)) {       // Ako rule nije string, onda je u formatu niza (npr. ['min' => 8] ili [self::RULE_MIN, 'min' => 8]),
+                    $ruleName = $rule[0];          // pa uzimamo ime pravila iz prvog elementa.
                 }
 
-                // REQUIRED: ako je polje obavezno, a vrijednost je prazna (false/''/null), dodaj grešku.
+
                 if ($ruleName === self::RULE_REQUIRED && !$value) {
-                    $this->addError($attribute, self::RULE_REQUIRED);
+                    $this->addError($attribute, self::RULE_REQUIRED); // REQUIRED: ako je polje obavezno, a vrijednost je prazna (false/''/null), dodaj grešku.
                 }
 
-                // EMAIL: provjera da li je vrijednost validan email format.
+
                 if ($ruleName === self::RULE_EMAIL && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
-                    $this->addError($attribute, self::RULE_EMAIL);
+                    $this->addError($attribute, self::RULE_EMAIL);    // EMAIL: provjera da li je vrijednost validan email format.
                 }
 
-                // MIN: provjera minimalne dužine stringa (npr. password >= 8).
-                if ($ruleName === self::RULE_MIN && strlen($value) < $rule['min']) {
-                    $this->addError($attribute, self::RULE_MIN, $rule); // Prosleđujemo $rule da se {min} može zamijeniti u poruci.
+
+                if ($ruleName === self::RULE_MIN && strlen($value) < $rule['min']) {  // MIN: provjera minimalne dužine stringa (npr. password >= 8).
+                    $this->addError($attribute, self::RULE_MIN, $rule);          // Prosleđujemo $rule da se {min} može zamijeniti u poruci.
                 }
 
-                // MAX: provjera maksimalne dužine stringa.
-                if ($ruleName === self::RULE_MAX && strlen($value) > $rule['max']) {
-                    $this->addError($attribute, self::RULE_MAX, $rule); // Prosleđujemo $rule da se {max} može zamijeniti u poruci.
+
+                if ($ruleName === self::RULE_MAX && strlen($value) > $rule['max']) {  // MAX: provjera maksimalne dužine stringa.
+                    $this->addError($attribute, self::RULE_MAX, $rule);          // Prosleđujemo $rule da se {max} može zamijeniti u poruci.
                 }
 
-                // MATCH: provjera da li se vrijednost poklapa sa vrijednošću drugog polja (npr. passwordConfirm == password).
-                if ($ruleName === self::RULE_MATCH && $value !== $this->{$rule['match']}) {
-                    $this->addError($attribute, self::RULE_MATCH, $rule); // Prosleđuje parametre (npr. ['match' => 'password']) radi poruke.
+
+                if ($ruleName === self::RULE_MATCH && $value !== $this->{$rule['match']}) {  // MATCH: provjera da li se vrijednost poklapa sa vrijednošću drugog polja (npr. passwordConfirm == password).
+                    $this->addError($attribute, self::RULE_MATCH, $rule);               // Prosleđuje parametre (npr. ['match' => 'password']) radi poruke.
                 }
             }
         }

@@ -91,4 +91,13 @@ abstract class Model
         return empty($this->errors); // Vraća true ako nema grešaka, false ako postoji bar jedna validaciona greška.
     }
 
+    public function hasError($attribute)
+    {
+        return $this->errors[$attribute] ?? false;
+    }
+
+    public function getFirstError($attribute)
+    {
+        return $this->errors[$attribute][0] ?? false;
+    }
 }

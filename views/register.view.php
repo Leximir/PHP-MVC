@@ -1,42 +1,13 @@
-<?php
-
-?>
-
 <h1>Create an Account</h1>
 
-<form action="" method="POST">
-
+<?php $form = \app\core\form\Form::begin('', "post") ?>
     <div class="row">
-        <div class="col">
-            <div class="mb-3">
-                <label>First Name</label>
-                <input name="firstname" type="text" class="form-control">
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="mb-3">
-                <label>Last Name</label>
-                <input name="lastname" type="text" class="form-control">
-            </div>
-        </div>
-
+        <?php echo $form->field($model, 'firstname') ?>
+        <?php echo $form->field($model, 'lastname') ?>
     </div>
-
-    <div class="mb-3">
-        <label>Email</label>
-        <input name="email" type="email" class="form-control">
-    </div>
-
-    <div class="mb-3">
-        <label>Password</label>
-        <input name="password" type="password" class="form-control">
-    </div>
-
-    <div class="mb-3">
-        <label>Confirm Password</label>
-        <input name="confirmPassword" type="password" class="form-control">
-    </div>
+    <?php echo $form->field($model, 'email') ?>
+    <?php echo $form->field($model, 'password')->passwordField() ?>
+    <?php echo $form->field($model, 'passwordConfirm')->passwordField() ?>
 
     <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+<?php \app\core\form\Form::end() ?>

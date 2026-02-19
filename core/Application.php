@@ -8,6 +8,7 @@ class Application
     public Router $router;                // Glavni router aplikacije (mapira URL rute na callback/controller).
     public Request $request;              // Trenutni HTTP zahtjev (čuva informacije poput path-a i HTTP metode).
     public Response $response;            // HTTP odgovor aplikacije (npr. postavljanje status koda, redirect, header-i).
+    public Database $db;
     public static Application $app;       // Globalna referenca na trenutno pokrenutu aplikaciju (lako dostupna iz drugih klasa).
     public Controller $controller;
     public function __construct($rootPath)
@@ -17,6 +18,7 @@ class Application
         $this->request = new Request();              // Kreira objekat Request za čitanje podataka o trenutnom zahtjevu.
         $this->response = new Response();            // Kreira objekat Response za upravljanje HTTP odgovorom (status kod, header-i).
         $this->router = new Router($this->request, $this->response);  // Kreira Router i prosljeđuje mu Request da može match-ovati rute i Response.
+        $this->db = new Database();
     }
 
     public function run()

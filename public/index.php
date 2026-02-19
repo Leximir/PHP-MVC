@@ -7,7 +7,18 @@ use app\core\Application;
 require_once __DIR__ . "/../vendor/autoload.php";
 require_once __DIR__ . "/../functions.php";
 
-$app = new Application(dirname(__DIR__)); // Kreira instancu aplikacije i postavlja root direktorij projekta; tokom inicijalizacije kreira Request i Router i povezuje ih da bi aplikacija mogla prepoznati trenutni URL i izvršiti odgovarajuću rutu.
+$dotenv = \Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+$dotenv->load();
+
+$config = [
+    'db' => [
+        'dsn' => $_ENV['DB_DSN'],
+        'user' => $_ENV['DB_USER'],
+        'password' => $_ENV['DB_PASSWORD'],
+    ]
+];
+
+$app = new Application(dirname(__DIR__), $config); // Kreira instancu aplikacije i postavlja root direktorij projekta; tokom inicijalizacije kreira Request i Router i povezuje ih da bi aplikacija mogla prepoznati trenutni URL i izvršiti odgovarajuću rutu.
 
 $app->router->get('/', [SiteController::class, 'home']);
 $app->router->get('/contact', [SiteController::class, 'index']);

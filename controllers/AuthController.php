@@ -8,7 +8,7 @@ use app\models\RegisterModel;
 
 class AuthController extends Controller
 {
-
+    // Test
     public function login(Request $request)
     {
 
